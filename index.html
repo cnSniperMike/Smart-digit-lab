@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartDigit Lab｜手写数字识别工程演示平台</title>
+  <meta name="description" content="面向理工场景的手写数字识别 AI Web 应用，支持画板输入、图片上传、模型诊断与工程化说明。" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <div class="brand">
+        <span class="logo">AI</span>
+        <div><strong>SmartDigit Lab</strong><small>手写数字识别工程演示平台</small></div>
+      </div>
+      <a href="#demo">在线体验</a>
+      <a href="#tech">技术路线</a>
+      <a href="#ethics">伦理合规</a>
+      <a class="nav-cta" href="#deploy">提交说明</a>
+    </nav>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">理工领域 AI 应用 · Web 交互 · 可部署提交</p>
+        <h1>把纸质表格中的手写数字，快速转化为可分析数据</h1>
+        <p class="lead">本网站围绕“手写数字识别”工程场景搭建，提供画板输入、图片上传、识别结果展示、模型性能说明、迭代记录和伦理反思，满足项目任务中“应用功能完整、界面合理、可公开访问”的网站要求。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#demo">开始识别</a>
+          <a class="btn ghost" href="#report">查看项目材料</a>
+        </div>
+        <div class="metrics">
+          <span><b>96%+</b><small>测试准确率示例</small></span>
+          <span><b>10类</b><small>数字 0–9</small></span>
+          <span><b>4轮</b><small>迭代记录</small></span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <img src="assets/model_arch.png" alt="模型结构图" />
+        <p>轻量 MLP / CNN 可替换架构，适合教学与工程原型验证。</p>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section id="demo" class="section demo-section">
+      <div class="section-title">
+        <p class="eyebrow">01 · 在线体验</p>
+        <h2>手写数字识别演示</h2>
+        <p>在画板中写一个 0–9 的数字，或上传一张数字图片。当前版本为第 16 轮9号保护版：先把输入归一化为 28×28 灰度图，再由轻量 MLP、增强模板匹配和用户反馈定向校正层共同投票，重点修正 9→7、7→9、6→5/4，同时保留 3/5/6/8/0 等前几轮校正；正式提交时也可将 <code>predict()</code> 替换为后端 PyTorch/ONNX CNN 模型接口。</p>
+      </div>
+      <div class="demo-grid">
+        <div class="panel canvas-panel">
+          <div class="toolbar">
+            <button id="clearBtn" class="btn small">清空画板</button>
+            <button id="predictBtn" class="btn small primary">开始识别</button>
+            <label class="upload btn small ghost">上传图片<input id="uploadInput" type="file" accept="image/*" /></label>
+          </div>
+          <canvas id="digitCanvas" width="280" height="280" aria-label="手写数字画板"></canvas>
+          <p class="hint">建议使用鼠标或触控笔，居中写一个较粗的黑色数字。</p>
+        </div>
+        <div class="panel result-panel">
+          <div class="prediction">
+            <span>预测结果</span>
+            <strong id="predictedDigit">—</strong>
+            <em id="confidenceText">等待输入</em>
+          </div>
+          <div id="bars" class="bars" aria-live="polite"></div>
+          <div class="diagnosis" id="diagnosisBox">系统会根据笔迹密度、位置、闭环特征和长宽比生成置信度，并给出改进建议。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tech" class="section split">
+      <div>
+        <p class="eyebrow">02 · 技术路线</p>
+        <h2>数据预处理 → 模型构建 → 训练优化 → 评估部署</h2>
+        <p>项目采用 MNIST/手写数字类数据集，完成灰度化、归一化、训练/验证/测试集划分，再使用神经网络完成分类。训练阶段监控损失与准确率，测试阶段输出混淆矩阵并分析易错类别。</p>
+        <ul class="checklist">
+          <li>输入：28×28 灰度图或画板采样图像</li>
+          <li>模型：MLP/CNN，可扩展 Dropout、BatchNorm、Early Stopping</li>
+          <li>输出：数字类别、置信度、诊断建议</li>
+          <li>部署：静态前端 + API 接口，或 Coze 工作流封装</li>
+        </ul>
+      </div>
+      <img class="rounded-img" src="assets/tech_route.png" alt="技术路线图" />
+    </section>
+
+    <section id="report" class="section cards-section">
+      <div class="section-title">
+        <p class="eyebrow">03 · 项目结果</p>
+        <h2>训练监控与结果分析</h2>
+      </div>
+      <div class="cards">
+        <article class="card"><img src="assets/loss_curve.png" alt="损失曲线" /><h3>损失曲线</h3><p>观察训练集与验证集 loss 是否同步下降，用于判断收敛与过拟合。</p></article>
+        <article class="card"><img src="assets/acc_curve.png" alt="准确率曲线" /><h3>准确率曲线</h3><p>展示模型随 epoch 的分类能力提升情况。</p></article>
+        <article class="card"><img src="assets/confusion_matrix.png" alt="混淆矩阵" /><h3>混淆矩阵</h3><p>分析 0–9 各类别的误判模式，为后续优化提供依据。</p></article>
+      </div>
+    </section>
+
+    <section id="prompt" class="section prompt-lab">
+      <div class="section-title">
+        <p class="eyebrow">04 · Coze / Prompt 设计</p>
+        <h2>工程诊断助手提示词生成器</h2>
+        <p>输入当前模型问题，生成可复制到 Coze Bot 的诊断提示词，用于满足项目中“目标、界面、规则、交互”四要素的提示词设计要求。</p>
+      </div>
+      <div class="prompt-box panel">
+        <label>模型问题描述</label>
+        <textarea id="problemInput" placeholder="例如：验证集准确率停在 90%，训练集继续上升，怀疑出现过拟合。"></textarea>
+        <button id="promptBtn" class="btn primary">生成提示词</button>
+        <pre id="promptOutput"></pre>
+      </div>
+    </section>
+
+    <section id="ethics" class="section ethics">
+      <p class="eyebrow">05 · AI 伦理与社会责任</p>
+      <h2>数据合规、模型可靠性与应用边界</h2>
+      <div class="ethics-grid">
+        <div><h3>数据合规</h3><p>优先使用公开数据集，不采集身份证号、手机号等敏感信息；上传图片仅在本地浏览器处理。</p></div>
+        <div><h3>可靠性</h3><p>对模糊笔迹、遮挡、低分辨率图片给出低置信度提示，避免将模型结果作为唯一决策依据。</p></div>
+        <div><h3>公平性</h3><p>在不同书写风格、笔画粗细和扫描质量上测试，减少对某类书写习惯的偏差。</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>SmartDigit Lab © 2026｜面向理工场景的 AI 手写数字识别 Web 应用</p>
+  </footer>
+  <script src="models/digit_mlp.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
