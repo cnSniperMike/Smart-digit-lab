@@ -68,16 +68,6 @@ smart-digit-lab/
 3. 在画板中手写数字，点击“开始识别”。
 4. 查看预测结果和各类别置信度。
 
-## 部署方法
-
-### GitHub Pages 部署
-
-1. 在 GitHub 新建公开仓库，例如 `smart-digit-lab`。
-2. 上传 `index.html`、`README.md` 等项目文件。
-3. 进入仓库的 `Settings` → `Pages`。
-4. Source 选择 `Deploy from a branch`。
-5. Branch 选择 `main`，目录选择 `/root`。
-6. 保存后等待 GitHub 生成访问链接。
 
 访问链接格式通常为：
 
